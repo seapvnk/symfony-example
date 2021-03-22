@@ -1,0 +1,11 @@
+index:
+   path: /
+   controller: App\Controller\GalleryController::index
+
+save:
+   path: /gallery/save
+   controller: App\Controller\GalleryController::save
+
+image_show:
+   path: /image/{id}
+   controller: App\Controller\GalleryController::show
