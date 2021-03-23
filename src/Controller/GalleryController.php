@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 
 class GalleryController extends AbstractController
 {
@@ -40,7 +43,38 @@ class GalleryController extends AbstractController
             "image" => $image
         ]);
     }
-    
+
+    /**
+     * @Route("/image/new", name="image_new")
+     * @Method({"GET", "POST"})
+     */
+    public function create(Request $request)
+    {
+        $image = new Image();
+        
+        $form  = $this->createFormBuilder($image)
+            ->add('name', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('path', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary mt-3']])
+            ->getForm();
+
+            var_dump($form);
+            exit;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $image = $form->getDate();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($image);
+            $entityManager->flush();
+
+            
+            //return $this->redirectToRoute('image_list');
+        }
+
+        return $this->render('gallery/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
+
+    }
 
     /**
      * @Route("/gallery/save", name="save")
