@@ -9,3 +9,11 @@ save:
 image_show:
    path: /image/{id}
    controller: App\Controller\GalleryController::show
+
+image_new:
+   path: /image/new
+   controller: App\Controller\GalleryController::create
+
+image_delete:
+   path: /image/delete/{id}
+   controller: App\Controller\GalleryController::delete

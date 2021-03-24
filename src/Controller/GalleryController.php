@@ -18,7 +18,7 @@ class GalleryController extends AbstractController
      * @Route("/", name="image_list")
      * @Method({"GET"})
      */
-    public function index()
+    public function index(): Response
     {
         $images = $this->getDoctrine()
             ->getRepository(Image::class)
@@ -33,7 +33,7 @@ class GalleryController extends AbstractController
      * @Route("/image/{:id}", name="image_show")
      * @Method({"GET"})
      */
-    public function show($id)
+    public function show($id): Response
     {
         $image = $this->getDoctrine()
             ->getRepository(Image::class)
@@ -48,7 +48,7 @@ class GalleryController extends AbstractController
      * @Route("/image/new", name="image_new")
      * @Method({"GET", "POST"})
      */
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $image = new Image();
         
@@ -57,17 +57,17 @@ class GalleryController extends AbstractController
             ->add('path', TextType::class, ['attr' => ['class' => 'form-control']])
             ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary mt-3']])
             ->getForm();
+        
+        $form->handleRequest($request);
 
-            var_dump($form);
-            exit;
         if ($form->isSubmitted() && $form->isValid()) {
-            $image = $form->getDate();
+            $image = $form->getData();
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($image);
             $entityManager->flush();
 
-            
-            //return $this->redirectToRoute('image_list');
+            return $this->redirectToRoute('image_list');
         }
 
         return $this->render('gallery/create.html.twig', [
@@ -79,7 +79,7 @@ class GalleryController extends AbstractController
     /**
      * @Route("/gallery/save", name="save")
      */
-    public function save()
+    public function save(): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -92,4 +92,21 @@ class GalleryController extends AbstractController
 
         return new Response('saved!');
     }
+
+    /**
+     * @Route("/image/delete", name="delete")
+     */
+    public function delete($id): Response
+    {
+        $entityManager = $this->getDoctrine();
+        $image = $entityManager
+            ->getRepository(Image::class)
+            ->find($id);
+
+        $entityManager->remove($image);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('image_list');
+    }
+
 }
