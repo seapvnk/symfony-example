@@ -30,7 +30,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/image/{:id}", name="image_show")
+     * @Route("/image/{id}", name="image_show")
      * @Method({"GET"})
      */
     public function show($id): Response
@@ -39,13 +39,13 @@ class GalleryController extends AbstractController
             ->getRepository(Image::class)
             ->find($id);
 
-        return $this->render('gallery/image.html.twig', [
+            return $this->render('gallery/image.html.twig', [
             "image" => $image
         ]);
     }
 
     /**
-     * @Route("/image/new", name="image_new")
+     * @Route("/gallery/new", name="image_new")
      * @Method({"GET", "POST"})
      */
     public function create(Request $request): Response
@@ -95,13 +95,13 @@ class GalleryController extends AbstractController
 
     /**
      * @Route("/image/delete", name="delete")
+     * @Method({"GET"})
      */
     public function delete($id): Response
     {
-        $entityManager = $this->getDoctrine();
-        $image = $entityManager
-            ->getRepository(Image::class)
-            ->find($id);
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository(Image::class);
+        $image = $repository->find($id);
 
         $entityManager->remove($image);
         $entityManager->flush();

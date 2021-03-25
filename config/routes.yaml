@@ -11,7 +11,7 @@ image_show:
    controller: App\Controller\GalleryController::show
 
 image_new:
-   path: /image/new
+   path: /gallery/new
    controller: App\Controller\GalleryController::create
 
 image_delete:
