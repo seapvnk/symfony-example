@@ -17,3 +17,7 @@ image_new:
 image_delete:
    path: /image/delete/{id}
    controller: App\Controller\GalleryController::delete
+
+edit_image:
+   path: /image/edit/{id}
+   controller: App\Controller\GalleryController::update

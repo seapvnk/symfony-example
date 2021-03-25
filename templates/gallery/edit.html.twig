@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gallery {% endblock%}
+
+
+{% block body %}
+
+    <div class="row">
+        <img src="{{ image.path }}" class="mb-4 w-25 m-auto img img-rounded">
+    </div>
+
+    <h1>editar {{ image.name }}</h1>
+    {{ form(form) }}
+    
+{% endblock %}

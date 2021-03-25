@@ -109,4 +109,37 @@ class GalleryController extends AbstractController
         return $this->redirectToRoute('image_list');
     }
 
+    /**
+     * @Route("/image/edit/{id}", name="edit_image")
+     * @Method({"GET", "PUT"})
+     */
+    public function update(Request $request, $id): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository(Image::class);
+        $image = $repository->find($id);
+        
+        $form  = $this->createFormBuilder($image)
+            ->add('name', TextType::class, ['attr' => ['class' => 'form-control']])
+            ->add('save', SubmitType::class, ['attr' => ['class' => 'btn btn-primary mt-3']])
+            ->getForm();
+        
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $image = $form->getData();
+            
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($image);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('image_list');
+        }
+
+        return $this->render('gallery/edit.html.twig', [
+            'form' => $form->createView(),
+            'image' => $image,
+        ]);
+    }
+
 }
